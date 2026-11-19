@@ -32,7 +32,7 @@
 - [x] 5.1 `npm run check` and `npm run lint` pass with no new errors.
 - [x] 5.2 `npm run build:github` succeeds and the local preview renders the setup screen, a chat with messages, and both rail states.
 - [x] 5.3 Confirm no new network origins: only the configured provider endpoint is contacted (the naming request included), and chats/keys remain in `localStorage` only.
-- [ ] 5.4 Commit and push to `main`; confirm the Pages workflow succeeds and the live URL renders the redesign.
+- [x] 5.4 Commit and push to `main`; confirm the Pages workflow succeeds and the live URL renders the redesign.
 
 ## Workflow follow-up
 
