@@ -308,12 +308,25 @@
     chatRequest.updatingMessage = ''
 
     focusInput()
+
+    void autoNameChat()
+  }
+
+  const NAME_PROMPT = "Using appropriate language, please tell me a short 6 word summary of this conversation's topic for use as a book title. Only respond with the summary."
+
+  const nameFromResponse = (response: any): string => {
+    let name = ''
+    response.getMessages().forEach(m => {
+      const candidate = m.content.split(/\s+/).slice(0, 8).join(' ').replace(/^[^a-z0-9!?]+|[^a-z0-9!?]+$/gi, '').trim()
+      if (candidate) name = candidate
+    })
+    return name
   }
 
   const suggestName = async (): Promise<void> => {
     const suggestMessage: Message = {
       role: 'user',
-      content: "Using appropriate language, please tell me a short 6 word summary of this conversation's topic for use as a book title. Only respond with the summary.",
+      content: NAME_PROMPT,
       uuid: uuidv4()
     }
 
@@ -343,11 +356,46 @@
         uuid: uuidv4()
       })
     } else {
-      response.getMessages().forEach(m => {
-        const name = m.content.split(/\s+/).slice(0, 8).join(' ').replace(/^[^a-z0-9!?]+|[^a-z0-9!?]+$/gi, '').trim()
-        if (name) chat.name = name
-      })
+      const name = nameFromResponse(response)
+      if (name) chat.name = name
       saveChatStore()
+    }
+  }
+
+  // First-exchange auto-naming. Runs on its own request object so it can never
+  // collide with a message the reader is already sending, writes nothing into the
+  // transcript, and marks the chat as attempted before the call so a failure or a
+  // reload cannot loop it.
+  const autoNameChat = async (): Promise<void> => {
+    if (!chat || chat.nameEdited || chat.autoNamed) return
+    if (!/^Chat \d+$/.test(chat.name || '')) return
+    const transcript = $currentChatMessages
+    if (!transcript.some(m => m.role === 'assistant')) return
+
+    chat.autoNamed = true
+    saveChatStore()
+
+    const namingRequest = new ChatRequest()
+    await namingRequest.setChat(chat)
+    const suggestMessages = transcript.slice(0, 10).map(m => ({ ...m }))
+    suggestMessages.push({ role: 'user', content: NAME_PROMPT, uuid: uuidv4() })
+
+    try {
+      const response = await namingRequest.sendRequest(suggestMessages, {
+        chat,
+        autoAddMessages: false,
+        streaming: false,
+        summaryRequest: true
+      })
+      await response.promiseToFinish()
+      if (response.hasError()) return
+      const name = nameFromResponse(response)
+      if (!name) return
+      chat.name = name
+      saveChatStore()
+      $checkStateChange++
+    } catch (e) {
+      console.error('Error auto-naming chat', e)
     }
   }
 
@@ -358,7 +406,9 @@
       value: chat.name,
       class: 'is-info',
       onSubmit: (value) => {
-        chat.name = (value || '').trim() || chat.name
+        const next = (value || '').trim()
+        if (next) chat.name = next
+        chat.nameEdited = true
         saveChatStore()
         $checkStateChange++
       }

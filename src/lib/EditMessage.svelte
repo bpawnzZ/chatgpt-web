@@ -26,6 +26,11 @@
   const isAssistant = message.role === 'assistant'
   const isImage = message.role === 'image'
 
+  // Speaker identity: the character name from the chat's profile, falling back to a neutral label.
+  $: speakerName = (chatSettings.characterName || '').trim() || 'Assistant'
+  $: speakerInitial = speakerName.charAt(0).toUpperCase()
+  $: showSpeaker = isUser || isAssistant || isImage
+
   // Marked options
   const markdownOptions = {
     gfm: true, // Use GitHub Flavored Markdown
@@ -371,6 +376,17 @@
 >
   <div class="message-body content">
  
+    {#if showSpeaker}
+    <div class="msg-head" class:is-user={isUser}>
+      {#if isUser}
+        <span class="msg-name">You</span>
+      {:else}
+        <span class="msg-avatar" aria-hidden="true">{speakerInitial}</span>
+        <span class="msg-name">{speakerName}</span>
+      {/if}
+    </div>
+    {/if}
+
     {#if editing}
       <form class="message-edit" on:submit|preventDefault={update}>
         <div

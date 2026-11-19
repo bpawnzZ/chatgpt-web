@@ -1,7 +1,7 @@
 <script lang="ts">
   import { replace } from 'svelte-spa-router'
   import type { Chat } from './Types.svelte'
-  import { deleteChat, pinMainMenu, saveChatStore } from './Storage.svelte'
+  import { deleteChat, pinMainMenu, saveChatStore, sidebarCollapsed } from './Storage.svelte'
   import Fa from 'svelte-fa'
   import { faTrash, faCircleCheck, faPencil } from '@fortawesome/free-solid-svg-icons/index'
   import { faMessage } from '@fortawesome/free-regular-svg-icons/index'
@@ -44,6 +44,7 @@
       chat.name = original
       return
     }
+    chat.nameEdited = true
     saveChatStore()
   }
 
@@ -101,7 +102,11 @@
       class:is-waiting={waitingForConfirm}
       class:is-disabled={!hasActiveModels()}
       class:is-active={activeChatId === chat.id}
-      on:click={() => { $pinMainMenu = false }} >
+      on:click={() => {
+        $pinMainMenu = false
+        // On a phone the rail covers the conversation, so get out of the way.
+        if (window.innerWidth <= 768) $sidebarCollapsed = true
+      }} >
       <span class="chat-item-name"><Fa class="mr-2 chat-icon" size="xs" icon="{faMessage}"/>{chat.name || `Chat ${chat.id}`}</span>
     </a>
     <div class="chat-menu-actions">

@@ -108,6 +108,8 @@ export type ChatSettings = {
 export type Chat = {
     id: number;
     name: string;
+    nameEdited?: boolean; // Set once the reader renames the chat; blocks automatic naming
+    autoNamed?: boolean; // Set when an automatic naming request has been attempted
     messages: Message[];
     usage: Record<Model, Usage>;
     settings: ChatSettings;

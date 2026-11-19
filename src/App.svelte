@@ -7,12 +7,14 @@
   import Home from './lib/Home.svelte'
   import Chat from './lib/Chat.svelte'
   import NewChat from './lib/NewChat.svelte'
-  import { chatsStorage } from './lib/Storage.svelte'
+  import { chatsStorage, sidebarCollapsed } from './lib/Storage.svelte'
   import { Modals, closeModal } from 'svelte-modals/legacy'
   import { dispatchModalEsc, checkModalEsc } from './lib/Util.svelte'
   import { set as setOpenAI } from './lib/providers/openai/util.svelte'
   import { hasActiveModels } from './lib/Models.svelte'
   import { routeLocation } from './lib/RouteState'
+  import Fa from 'svelte-fa'
+  import { faBars } from '@fortawesome/free-solid-svg-icons/index'
 
   // Check if the API key is passed in as a "key" query parameter - if so, save it
   // Example: https://niek.github.io/chatgpt-web/#/?key=sk-...
@@ -49,9 +51,23 @@
     else didInitializeRoute = true
   }
 
+  // The rail width is a CSS variable on <html>, so the collapse state lands there too.
+  $: if (typeof document !== 'undefined') {
+    document.documentElement.classList.toggle('rail-collapsed', $sidebarCollapsed)
+  }
+
 </script>
 
 <Navbar />
+{#if $sidebarCollapsed}
+<button
+  class="rail-toggle"
+  type="button"
+  aria-label="Show chat list"
+  aria-expanded="false"
+  on:click={() => { $sidebarCollapsed = false }}
+><span class="icon"><Fa icon={faBars} /></span></button>
+{/if}
 <div class="side-bar-column">
   <Sidebar />
 </div>

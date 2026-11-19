@@ -1,8 +1,8 @@
 <script lang="ts">
   import ChatMenuItem from './ChatMenuItem.svelte'
-  import { chatsStorage, pinMainMenu, checkStateChange, getChatSortOption, setChatSortOption } from './Storage.svelte'
+  import { chatsStorage, pinMainMenu, checkStateChange, getChatSortOption, setChatSortOption, sidebarCollapsed } from './Storage.svelte'
   import Fa from 'svelte-fa'
-  import { faSquarePlus, faKey } from '@fortawesome/free-solid-svg-icons/index'
+  import { faSquarePlus, faKey, faAnglesLeft } from '@fortawesome/free-solid-svg-icons/index'
   import ChatOptionMenu from './ChatOptionMenu.svelte'
   import logo from '../assets/logo.svg'
   import { clickOutside } from 'svelte-use-click-outside'
@@ -35,8 +35,18 @@
           <img src={logo} alt="ChatGPT-web" width="24" height="24" />
           <p class="ml-2 is-size-5 has-text-weight-bold">ChatGPT-web</p>
         </a>
-        <div class="chat-option-menu navbar-item is-pulled-right">
-          <ChatOptionMenu chatId={$activeChatId} />
+        <div class="menu-nav-bar-right">
+          <button
+            class="rail-icon-button"
+            type="button"
+            title="Hide chat list"
+            aria-label="Hide chat list"
+            aria-expanded="true"
+            on:click|preventDefault={() => { $sidebarCollapsed = true }}
+          ><span class="icon"><Fa icon={faAnglesLeft} /></span></button>
+          <div class="chat-option-menu navbar-item">
+            <ChatOptionMenu chatId={$activeChatId} />
+          </div>
         </div>
       </div>
     <ul class="menu-list menu-expansion-list">

@@ -44,6 +44,7 @@
   const apiBaseUriFromEnv = import.meta.env.VITE_API_BASE || ''
   const providerFromEnv = import.meta.env.VITE_PROVIDER
   export const apiKeyStorage = persisted('apiKey', apiKeyFromEnv as string)
+  export const sidebarCollapsed = persisted('sidebarCollapsed', false) // Chat rail collapsed to zero width
   export let checkStateChange = writable(0) // Trigger for Chat
   export let showSetChatSettings = writable(false) //
   export let submitExitingPromptsNow = writable(false) // for them to go now.  Will not submit anything in the input

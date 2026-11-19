@@ -6,16 +6,30 @@ html {
   --scrollbarBG: transparent;
   --thumbBG: hsl(0, 0%, 60%); /* scollbar color light */
   /* Back-ground */
-  --BgColorDark: hsl(228, 10%, 10%);
-  --BgColorLight: hsl(0, 0%, 100%);
-  --BgColorSidebarDark: rgb(16, 17, 22);
-  --BgColorSidebarLight: hsla(0, 0%, 93%, 0.354);
+  --BgColorDark: #12111a;
+  --BgColorLight: #f8f5ef;
+  --BgColorSidebarDark: #17161f;
+  --BgColorSidebarLight: #f2ede4;
   --chatToolDrawerSize: 40px;
   --chatToolDrawerColor: var(--BgColorSidebarLight);
-  
+
+  /* Semantic palette (light values; dark overrides below) */
+  --surface-base: #f8f5ef;
+  --surface-rail: #f2ede4;
+  --surface-card: #ffffff;
+  --surface-raised: #ece6da;
+  --border-soft: #e0d8c9;
+  --text-strong: #2b2733;
+  --text-muted: #736c7d;
+  --accent: #8a6a2c;
+  --accent-soft: rgba(138, 106, 44, 0.1);
+  --ui-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --prose-font: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --reading-measure: 46rem;
+
   /* Sizes */
   --sidebarTop: 0px;
-  --sidebarWidth: max(300px, 20%);
+  --sidebarWidth: 288px;
   --mainContentWidth: calc(100% - var(--sidebarWidth));
   
   --sectionPaddingTop: 0px;
@@ -41,16 +55,26 @@ html {
 
 @media (prefers-color-scheme: dark) {
   html {
-    --thumbBG: #3f3f3f; /* scrollbar color dark */
+    --thumbBG: #3a3547; /* scrollbar color dark */
     --BgColor: var(--BgColorDark);
     --chatToolDrawerColor: var(--BgColorSidebarDark);
+
+    --surface-base: #12111a;
+    --surface-rail: #17161f;
+    --surface-card: #1c1b26;
+    --surface-raised: #262435;
+    --border-soft: #2c2938;
+    --text-strong: #e7e3ee;
+    --text-muted: #928ca4;
+    --accent: #d3ae72;
+    --accent-soft: rgba(211, 174, 114, 0.12);
   }
 }
 
 @media only screen and (max-width: 900px) {
   html {
-    --sidebarWidth: max(250px, 20%);
- 
+    --sidebarWidth: 260px;
+
     --chatContentPaddingTop: 50px;
     --chatContentPaddingRight: 20px;
     --chatContentPaddingLeft: 20px;
@@ -161,9 +185,9 @@ select option.is-default {
   width: fit-content;
 }
 
-/* Swap the border on user messages to the other side */
+/* Accent edge on the reader's own turns */
 .user-message>.message-body {
-  border-width: 0 4px 0 0 !important;
+  border-width: 1px 2px 1px 1px !important;
 }
 
 /* Show the edit button on hover of the chat name */
@@ -767,4 +791,379 @@ aside.menu.main-menu .menu-expanse {
 
 .modal.chat-settings .field-body {
   max-width: calc(100% - 40px);
+}
+
+/* ============================================================
+   Theme layer — character-chat reading surface
+   ============================================================ */
+
+body {
+  background-color: var(--surface-base);
+  color: var(--text-strong);
+  font-family: var(--ui-font);
+}
+
+/* ---- Rail ---- */
+aside.menu.main-menu .menu-expanse {
+  background-color: var(--surface-rail);
+  box-shadow: none;
+  border-right: 1px solid var(--border-soft);
+}
+
+.main-menu .menu-nav-bar {
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.4rem 0.6rem;
+  margin-bottom: 0.2rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.main-menu .menu-nav-bar .gpt-logo p {
+  color: var(--text-strong);
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em;
+}
+
+.rail-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.rail-icon-button:hover {
+  background: var(--accent-soft);
+  border-color: var(--border-soft);
+  color: var(--text-strong);
+}
+
+.menu-expansion-list {
+  padding: 0 0.3rem;
+}
+
+.menu-nav-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-left: auto;
+}
+
+.menu-list .chat-menu-item {
+  display: block;
+  padding: 0.4rem 0.2rem;
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.menu-list .chat-menu-item:hover {
+  background-color: var(--accent-soft);
+  color: var(--text-strong);
+}
+
+.menu-list .chat-menu-item.is-active {
+  background-color: var(--surface-card);
+  box-shadow: inset 2px 0 0 var(--accent);
+  color: var(--text-strong);
+}
+
+.menu-list .chat-menu-item .chat-icon {
+  opacity: 0.5;
+}
+
+.main-menu .bottom-buttons {
+  border-top: 1px solid var(--border-soft);
+  padding: 0.35rem 0.25rem 0.45rem !important;
+}
+
+/* ---- Collapsible rail ---- */
+#app.rail-collapsed,
+html.rail-collapsed {
+  --sidebarWidth: 0px;
+  --mainContentWidth: 100%;
+}
+
+html.rail-collapsed .side-bar-column {
+  display: none;
+}
+
+.rail-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background-color: var(--surface-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  box-shadow: 0 10px 24px -18px rgba(0, 0, 0, 0.8);
+}
+
+.rail-toggle:hover {
+  color: var(--text-strong);
+  border-color: var(--accent);
+}
+
+/* ---- Reading column ---- */
+.chat-content {
+  max-width: calc(var(--reading-measure) + var(--chatContentPaddingLeft) + var(--chatContentPaddingRight));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section {
+  max-width: var(--reading-measure);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chat-header {
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.chat-header .subtitle {
+  color: var(--text-strong);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Messages ---- */
+.chat-message.message {
+  max-width: 100%;
+  border: 0;
+  background: transparent;
+}
+
+.chat-message > .message-body {
+  padding: 0.85rem 1.05rem 0.95rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background-color: var(--surface-card);
+  color: var(--text-strong);
+}
+
+.chat-message.assistant-message > .message-body {
+  border-left: 2px solid var(--accent);
+  border-top-left-radius: 3px;
+}
+
+.chat-message.user-message > .message-body {
+  background-color: var(--surface-raised);
+  border-color: transparent;
+  border-right: 2px solid var(--accent);
+  border-top-right-radius: 3px;
+}
+
+.chat-message.is-warning > .message-body {
+  background-color: transparent;
+  border-style: dashed;
+}
+
+.chat-message.is-danger > .message-body {
+  border-color: var(--bulma-danger);
+}
+
+.msg-head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.35rem;
+}
+
+.msg-head.is-user {
+  justify-content: flex-end;
+}
+
+.msg-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--accent-soft);
+  border-radius: 50%;
+  background-color: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--prose-font);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.msg-name {
+  color: var(--text-strong);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.msg-head.is-user .msg-name {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.message-display {
+  font-family: var(--prose-font);
+  font-size: 1.0625rem;
+  line-height: 1.72;
+}
+
+.message-display > :last-child {
+  margin-bottom: 0;
+}
+
+.message-display pre,
+.message-display code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+.message-note {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+/* ---- Composer ---- */
+.prompt-input-container {
+  background: transparent;
+}
+
+.prompt-input-container form.field {
+  max-width: calc(var(--reading-measure) + 8px);
+  margin: 0 auto;
+  padding: 6px;
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background-color: var(--surface-card);
+  box-shadow: 0 18px 40px -30px rgba(0, 0, 0, 0.8);
+}
+
+.prompt-input-container textarea.input,
+.prompt-input-container textarea.chat-input {
+  padding-left: 0.6rem;
+  border: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--text-strong) !important;
+  font-family: var(--ui-font);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.prompt-input-container textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.prompt-input-container .button {
+  border-color: transparent;
+  border-radius: 10px;
+  background-color: transparent;
+  color: var(--text-muted);
+}
+
+.prompt-input-container .button:hover {
+  background-color: var(--accent-soft);
+  color: var(--text-strong);
+}
+
+.prompt-input-container .control.send .button,
+.prompt-input-container .control.send .button:hover {
+  border: 0;
+  border-radius: 12px;
+  background-color: var(--accent);
+  color: #14120e;
+}
+
+.prompt-input-container .control.send .button:hover {
+  filter: brightness(1.08);
+}
+
+/* ---- Form controls ---- */
+.input,
+.textarea,
+.select select {
+  border-color: var(--border-soft);
+  border-radius: 10px;
+  background-color: var(--surface-base);
+  color: var(--text-strong);
+}
+
+.input:focus,
+.textarea:focus,
+.select select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.button {
+  border-radius: 10px;
+}
+
+.button.is-info {
+  border-color: var(--accent);
+  background-color: var(--accent);
+  color: #14120e;
+}
+
+.label {
+  color: var(--text-strong);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ---- Setup screen ---- */
+.section .message {
+  background: transparent;
+}
+
+.section .message > .message-body {
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background-color: var(--surface-card);
+  color: var(--text-strong);
+}
+
+.section .message-body > p a {
+  color: var(--accent);
+}
+
+.help {
+  color: var(--text-muted);
+}
+
+/* ---- Modals ---- */
+.modal-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+}
+
+.modal-card-head,
+.modal-card-foot {
+  border-color: var(--border-soft);
+  background-color: var(--surface-rail);
+}
+
+.modal-card-body {
+  background-color: var(--surface-card);
+  color: var(--text-strong);
+}
+
+/* ---- Icons inherit the palette ---- */
+.default-text {
+  color: var(--text-muted) !important;
 }
