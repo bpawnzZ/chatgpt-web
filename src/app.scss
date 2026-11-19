@@ -899,6 +899,18 @@ html.rail-collapsed .side-bar-column {
   display: none;
 }
 
+/* On phones the legacy navbar owns the menu (default hidden, pinned on demand),
+   so the collapse rule and its button stay desktop-only. */
+@media only screen and (max-width: 768px) {
+  html.rail-collapsed .side-bar-column {
+    display: block;
+  }
+
+  .rail-toggle {
+    display: none !important;
+  }
+}
+
 .rail-toggle {
   position: fixed;
   top: 10px;
