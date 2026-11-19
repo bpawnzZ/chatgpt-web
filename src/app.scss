@@ -23,6 +23,8 @@ html {
   --text-muted: #736c7d;
   --accent: #8a6a2c;
   --accent-soft: rgba(138, 106, 44, 0.1);
+  --speech: #8f5a10;
+  --narration: #6a6379;
   --ui-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --prose-font: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, "Times New Roman", serif;
   --reading-measure: 46rem;
@@ -68,6 +70,8 @@ html {
     --text-muted: #928ca4;
     --accent: #d3ae72;
     --accent-soft: rgba(211, 174, 114, 0.12);
+    --speech: #e8bd7b;
+    --narration: #9a91b4;
   }
 }
 
@@ -199,7 +203,7 @@ select option.is-default {
 /* Style the chat input */
 .chat-input {
   overflow-y: hidden;
-  resize: vertical;
+  resize: none;
 }
 
 /* Pulsing effect - background goes to red color and back */
@@ -932,7 +936,7 @@ html.rail-collapsed .side-bar-column {
 }
 
 .chat-header {
-  margin-bottom: 0.6rem;
+  margin-bottom: 1rem;
   padding-bottom: 0.55rem;
   border-bottom: 1px solid var(--border-soft);
 }
@@ -1025,6 +1029,24 @@ html.rail-collapsed .side-bar-column {
 
 .message-display > :last-child {
   margin-bottom: 0;
+}
+
+/* Roleplay formatting: *actions and thoughts* read as narration, "spoken lines"
+   read as dialogue. Palettes that separate the two make a model's output legible
+   at a glance without adding markup to the transcript. */
+.message-display em,
+.message-display i {
+  color: var(--narration);
+  font-style: italic;
+}
+
+.message-display .speech {
+  color: var(--speech);
+}
+
+.message-display strong {
+  color: var(--text-strong);
+  font-weight: 650;
 }
 
 .message-display pre,

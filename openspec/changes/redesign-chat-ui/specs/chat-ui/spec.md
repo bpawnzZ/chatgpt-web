@@ -47,6 +47,21 @@ The chat list rail SHALL be collapsible to zero width and restorable, so the con
 - **WHEN** the reader selects a chat from the rail on a narrow viewport
 - **THEN** the rail closes so the conversation is visible
 
+### Requirement: Dialogue and narration are visually distinct
+Message text SHALL separate roleplay formatting into visually distinct parts in both colour schemes: emphasis spans (`*action*`, `_action_`) render as muted narration, and quoted spans render as dialogue in a warmer, brighter colour.
+
+#### Scenario: Action beats
+- **WHEN** an assistant message contains `*She sets the lamp down.*`
+- **THEN** that span renders italic in the narration colour, visibly dimmer than the surrounding text
+
+#### Scenario: Spoken lines
+- **WHEN** a message contains text inside straight, curly, or guillemet quotes
+- **THEN** each quoted span renders in the dialogue colour, distinct from both body text and narration
+
+#### Scenario: Mixed message
+- **WHEN** a single message alternates narration paragraphs and quoted speech
+- **THEN** all three roles — body text, narration, dialogue — are distinguishable at a glance, and the quoted spans keep their quotation marks
+
 ### Requirement: Conversation is a bounded reading column
 Conversation content SHALL be constrained to a comfortable reading measure and centred within the available width, rather than stretching to the viewport edge.
 

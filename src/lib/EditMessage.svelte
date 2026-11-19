@@ -1,5 +1,6 @@
 <script lang="ts">
   import Code from './Code.svelte'
+  import SpeechText from './SpeechText.svelte'
   import { afterUpdate, createEventDispatcher, onMount } from 'svelte'
   import { deleteMessage, deleteSummaryMessage, truncateFromMessage, submitExitingPromptsNow, continueMessage, updateMessages } from './Storage.svelte'
   import { getPrice } from './Stats.svelte'
@@ -39,6 +40,7 @@
   }
   const markdownRenderers = {
     code: Code,
+    text: SpeechText,
     html: buildUnsupportedHTML()
   }
 

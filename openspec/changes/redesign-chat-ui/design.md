@@ -49,6 +49,9 @@ Reason: the summary path already exists, already uses `summaryRequest: true` (so
 **7. Footer credit removed at the source, container kept.**
 `Footer.svelte` keeps its fixed masks and `.section-footer` wrapper (the composer's gradient mask and the `.pin-footer` positioning depend on them) and drops the credit block entirely. Reason: the credit is presentational, but the container is load-bearing for the fixed composer.
 
+**8. Roleplay formatting is a renderer concern, not a prompt concern.**
+A `text` renderer override splits quoted spans out of each markdown text node into `<span class="speech">`; emphasis already arrives as `<em>` from markdown, so narration is pure CSS. Reason: the app must render whatever convention the model uses — instructing the model would change the request payload and only help one provider's habits. Alternative rejected: injecting a formatting system prompt (mutates conversations the reader did not ask to change, and is invisible in the transcript).
+
 ## Risks / Trade-offs
 
 - **[Auto-naming spends the reader's tokens on a request they did not type]** → One request, only on the first exchange, only when the name is untouched, `maxTokens` bounded by the summary path; a failure is silent and never retried. Rough cost: a few hundred tokens once per chat.
